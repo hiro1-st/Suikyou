@@ -1,343 +1,316 @@
 import streamlit as st
-from streamlit.components.v1 import html
 
-# ページ設定
+# ページの設定
 st.set_page_config(
-    page_title="HTMLボタンでページ遷移",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    page_title="カスタムボタンナビゲーション",
+    page_icon="🚀",
+    layout="wide"
 )
-
-st.title("🚀 HTMLマークダウンを使用したページ遷移ボタン")
 
 # セッション状態の初期化
 if 'current_page' not in st.session_state:
-    st.session_state.current_page = 'home'
+    st.session_state.current_page = 'ホーム'
 
-# 方法1: JavaScriptを使用したStreamlit内ページ遷移
-st.header("方法1: JavaScript + Streamlit内ページ遷移")
-
-# CSSとJavaScriptを含むHTMLコンポーネント
-navigation_html = """
+# カスタムCSS
+st.markdown("""
 <style>
-    .nav-button {
-        background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        padding: 12px 24px;
-        margin: 8px;
-        border-radius: 25px;
-        cursor: pointer;
-        font-size: 16px;
-        font-weight: bold;
-        transition: all 0.3s ease;
-        min-width: 150px;
-    }
-    
-    .nav-button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        background: linear-gradient(45deg, #764ba2 0%, #667eea 100%);
-    }
-    
-    .nav-button:active {
-        transform: translateY(-1px);
-    }
-    
-    .nav-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        justify-content: center;
-        margin: 20px 0;
-    }
-    
-    .home-btn { background: linear-gradient(45deg, #FF6B6B, #FF8E53); }
-    .about-btn { background: linear-gradient(45deg, #4ECDC4, #44A08D); }
-    .contact-btn { background: linear-gradient(45deg, #45B7D1, #96C93D); }
-    .services-btn { background: linear-gradient(45deg, #F093FB, #F5576C); }
-</style>
+/* ボタンのベーススタイル */
+.custom-button {
+    display: inline-block;
+    padding: 15px 30px;
+    margin: 10px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    min-width: 150px;
+}
 
-<div class="nav-container">
-    <button class="nav-button home-btn" onclick="navigateTo('home')">🏠 ホーム</button>
-    <button class="nav-button about-btn" onclick="navigateTo('about')">👥 About</button>
-    <button class="nav-button services-btn" onclick="navigateTo('services')">⚙️ サービス</button>
-    <button class="nav-button contact-btn" onclick="navigateTo('contact')">📞 お問い合わせ</button>
-</div>
+/* ホバー効果 */
+.custom-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
 
-<script>
-    function navigateTo(page) {
-        // Streamlitにメッセージを送信
-        window.parent.postMessage({
-            type: 'streamlit:setComponentValue',
-            value: page
-        }, '*');
-    }
-</script>
-"""
+/* アクティブ効果 */
+.custom-button:active {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
 
-# HTMLコンポーネントを表示
-selected_page = html(navigation_html, height=100)
+/* 各ボタンの個別カラー */
+.button-home {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
 
-# ページ選択の處理
-if selected_page:
-    st.session_state.current_page = selected_page
+.button-about {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
 
-# 現在のページに基づいてコンテンツを表示
-def display_page_content(page):
-    if page == 'home':
-        st.markdown("## 🏠 ホームページ")
-        st.markdown("""
-        **ようこそ！** 
-        
-        これはHTMLボタンを使用したページ遷移のデモです。
-        上のボタンをクリックして他のページに移動できます。
-        """)
-        
-    elif page == 'about':
-        st.markdown("## 👥 Aboutページ")
-        st.markdown("""
-        **会社概要**
-        
-        - 設立: 2024年
-        - 事業内容: Streamlitアプリケーション開発
-        - 所在地: 東京都
-        """)
-        
-    elif page == 'services':
-        st.markdown("## ⚙️ サービスページ")
-        st.markdown("""
-        **提供サービス**
-        
-        1. **Webアプリケーション開発**
-        2. **データ分析ダッシュボード**
-        3. **機械学習モデルデプロイ**
-        4. **コンサルティング**
-        """)
-        
-    elif page == 'contact':
-        st.markdown("## 📞 お問い合わせページ")
-        st.markdown("""
-        **連絡先情報**
-        
-        - Email: contact@example.com
-        - Phone: 03-1234-5678
-        - 営業時間: 平日 9:00-18:00
-        """)
+.button-services {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
 
-# ページコンテンツを表示
-display_page_content(st.session_state.current_page)
+.button-contact {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
 
-st.divider()
+/* サイズ変更用のクラス */
+.button-small {
+    padding: 8px 16px;
+    font-size: 12px;
+    min-width: 100px;
+}
 
-# 方法2: 外部リンクへの遷移
-st.header("方法2: 外部サイトへのリンクボタン")
+.button-medium {
+    padding: 12px 24px;
+    font-size: 14px;
+    min-width: 120px;
+}
 
-external_links_html = """
-<style>
-    .external-button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        text-decoration: none;
-        display: inline-block;
-        padding: 15px 30px;
-        margin: 10px;
-        border-radius: 30px;
-        font-size: 16px;
-        font-weight: bold;
-        transition: all 0.3s ease;
-        border: 2px solid transparent;
-        min-width: 180px;
-        text-align: center;
-    }
-    
-    .external-button:hover {
-        transform: translateY(-3px) scale(1.05);
-        box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-        text-decoration: none;
-        color: white;
-    }
-    
-    .github-btn {
-        background: linear-gradient(135deg, #333 0%, #24292e 100%);
-    }
-    
-    .google-btn {
-        background: linear-gradient(135deg, #4285f4 0%, #34a853 50%, #fbbc05 75%, #ea4335 100%);
-    }
-    
-    .youtube-btn {
-        background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
-    }
-    
-    .stackoverflow-btn {
-        background: linear-gradient(135deg, #f48024 0%, #f2740d 100%);
-    }
-    
-    .links-container {
-        display: flex;
+.button-large {
+    padding: 20px 40px;
+    font-size: 18px;
+    min-width: 180px;
+}
+
+.button-extra-large {
+    padding: 25px 50px;
+    font-size: 20px;
+    min-width: 220px;
+}
+
+/* ボタンコンテナ */
+.button-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin: 30px 0;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+    .button-container {
         flex-direction: column;
-        align-items: center;
-        gap: 15px;
-        margin: 20px 0;
     }
+    
+    .custom-button {
+        width: 80%;
+        max-width: 300px;
+    }
+}
+
+/* ページコンテンツのスタイル */
+.page-content {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 30px;
+    border-radius: 15px;
+    margin: 20px 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.page-title {
+    color: #333;
+    font-size: 2.5em;
+    text-align: center;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
 </style>
+""", unsafe_allow_html=True)
 
-<div class="links-container">
-    <a href="https://github.com" target="_blank" class="external-button github-btn">
-        🐙 GitHub
-    </a>
-    <a href="https://www.google.com" target="_blank" class="external-button google-btn">
-        🔍 Google
-    </a>
-    <a href="https://www.youtube.com" target="_blank" class="external-button youtube-btn">
-        📺 YouTube
-    </a>
-    <a href="https://stackoverflow.com" target="_blank" class="external-button stackoverflow-btn">
-        💡 Stack Overflow
-    </a>
-</div>
-"""
+# JavaScript for button clicks
+st.markdown("""
+<script>
+function setPage(page) {
+    // Streamlit の session state を更新するためのハック
+    window.parent.postMessage({
+        type: 'streamlit:setComponentValue',
+        value: page
+    }, '*');
+}
+</script>
+""", unsafe_allow_html=True)
 
-st.markdown(external_links_html, unsafe_allow_html=True)
-
-st.divider()
-
-# 方法3: 条件付きナビゲーション
-st.header("方法3: 条件付きナビゲーション")
-
-# ユーザー認証シミュレーション
-if 'logged_in' not in st.session_state:
-    st.session_state.logged_in = False
-
-if not st.session_state.logged_in:
-    st.warning("ログインが必要です")
+def create_navigation_buttons(button_size="medium"):
+    """ナビゲーションボタンを作成する関数"""
+    size_class = f"button-{button_size}"
     
-    login_html = """
-    <style>
-        .login-button {
-            background: linear-gradient(45deg, #56ab2f 0%, #a8e6cf 100%);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-        
-        .login-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
-        }
-    </style>
-    
-    <button class="login-button" onclick="login()">🔐 ログイン</button>
-    
-    <script>
-        function login() {
-            window.parent.postMessage({
-                type: 'streamlit:setComponentValue',
-                value: 'login'
-            }, '*');
-        }
-    </script>
-    """
-    
-    login_result = html(login_html, height=80)
-    
-    if login_result == 'login':
-        st.session_state.logged_in = True
-        st.rerun()
-        
-else:
-    st.success("ログイン中")
-    
-    protected_nav_html = """
-    <style>
-        .protected-button {
-            background: linear-gradient(45deg, #ffeaa7 0%, #fab1a0 100%);
-            color: #2d3436;
-            border: none;
-            padding: 10px 20px;
-            margin: 5px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-        
-        .protected-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        
-        .logout-btn {
-            background: linear-gradient(45deg, #e17055 0%, #d63031 100%);
-            color: white;
-        }
-    </style>
-    
-    <div style="text-align: center;">
-        <button class="protected-button" onclick="navigate('dashboard')">📊 ダッシュボード</button>
-        <button class="protected-button" onclick="navigate('profile')">👤 プロフィール</button>
-        <button class="protected-button" onclick="navigate('settings')">⚙️ 設定</button>
-        <button class="protected-button logout-btn" onclick="navigate('logout')">🚪 ログアウト</button>
+    button_html = f"""
+    <div class="button-container">
+        <button class="custom-button button-home {size_class}" onclick="window.location.reload(); window.sessionStorage.setItem('page', 'ホーム');">
+            🏠 ホーム
+        </button>
+        <button class="custom-button button-about {size_class}" onclick="window.location.reload(); window.sessionStorage.setItem('page', 'アバウト');">
+            👤 アバウト
+        </button>
+        <button class="custom-button button-services {size_class}" onclick="window.location.reload(); window.sessionStorage.setItem('page', 'サービス');">
+            🛠️ サービス
+        </button>
+        <button class="custom-button button-contact {size_class}" onclick="window.location.reload(); window.sessionStorage.setItem('page', 'お問い合わせ');">
+            📧 お問い合わせ
+        </button>
     </div>
     
     <script>
-        function navigate(action) {
-            window.parent.postMessage({
-                type: 'streamlit:setComponentValue',
-                value: action
-            }, '*');
+    // ページロード時にsessionStorageから状態を復元
+    window.onload = function() {
+        const savedPage = window.sessionStorage.getItem('page');
+        if (savedPage) {
+            // Streamlit のコンポーネントに値を送信
+            const event = new CustomEvent('streamlit:componentValue', {
+                detail: { value: savedPage }
+            });
+            window.dispatchEvent(event);
         }
+    }
     </script>
     """
     
-    protected_result = html(protected_nav_html, height=80)
-    
-    if protected_result == 'logout':
-        st.session_state.logged_in = False
-        st.rerun()
-    elif protected_result:
-        st.info(f"選択されたページ: {protected_result}")
+    st.markdown(button_html, unsafe_allow_html=True)
 
-# 技術的な説明
-st.divider()
-st.header("🔧 技術的な詳細")
+def display_page_content(page_name):
+    """各ページのコンテンツを表示する関数"""
+    content_map = {
+        'ホーム': {
+            'title': '🏠 ホームページへようこそ',
+            'content': '''
+            ここはホームページです。このサイトでは、カスタマイズされたボタンを使って
+            スムーズなナビゲーションを体験できます。
+            
+            **特徴:**
+            - レスポンシブデザイン
+            - アニメーション効果
+            - カスタマイズ可能なサイズ
+            '''
+        },
+        'アバウト': {
+            'title': '👤 私たちについて',
+            'content': '''
+            私たちは革新的なウェブソリューションを提供する会社です。
+            Streamlitを使用したインタラクティブなアプリケーションの開発に特化しています。
+            
+            **ミッション:**
+            - ユーザーフレンドリーなインターフェース
+            - 高品質なコード
+            - 優れたユーザーエクスペリエンス
+            '''
+        },
+        'サービス': {
+            'title': '🛠️ サービス内容',
+            'content': '''
+            私たちが提供するサービスの一覧です。
+            
+            **提供サービス:**
+            - Streamlitアプリケーション開発
+            - データビジュアライゼーション
+            - カスタムUI/UXデザイン
+            - ウェブアプリケーション最適化
+            '''
+        },
+        'お問い合わせ': {
+            'title': '📧 お問い合わせ',
+            'content': '''
+            ご質問やご相談がございましたら、お気軽にお問い合わせください。
+            
+            **連絡先:**
+            - Email: contact@example.com
+            - Phone: 03-1234-5678
+            - Address: 東京都渋谷区...
+            
+            お客様のご要望に合わせたソリューションを提供いたします。
+            '''
+        }
+    }
+    
+    page_info = content_map.get(page_name, content_map['ホーム'])
+    
+    st.markdown(f"""
+    <div class="page-content">
+        <h1 class="page-title">{page_info['title']}</h1>
+        <div style="font-size: 16px; line-height: 1.6; color: #555;">
+            {page_info['content'].replace('**', '<strong>').replace('**', '</strong>')}
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
-with st.expander("コードの詳細解説を見る"):
-    st.markdown("""
-    ### HTMLマークダウンでのページ遷移の仕組み
-    
-    **1. JavaScript PostMessage API**
-    ```javascript
-    window.parent.postMessage({
-        type: 'streamlit:setComponentValue',
-        value: 'page_name'
-    }, '*');
-    ```
-    
-    **2. Streamlit Components HTML**
-    ```python
-    from streamlit.components.v1 import html
-    result = html(html_string, height=100)
-    ```
-    
-    **3. セッション状態管理**
-    ```python
-    if 'current_page' not in st.session_state:
-        st.session_state.current_page = 'home'
-    ```
-    
-    **4. 条件分岐でページ表示**
-    ```python
-    if st.session_state.current_page == 'home':
-        display_home_page()
-    ```
-    """)
+# メイン画面
+st.title("🚀 カスタムボタンナビゲーション")
+
+# サイドバーでボタンサイズを選択
+st.sidebar.header("⚙️ 設定")
+button_size = st.sidebar.selectbox(
+    "ボタンサイズを選択:",
+    ["small", "medium", "large", "extra-large"],
+    index=1
+)
+
+st.sidebar.markdown("---")
+st.sidebar.markdown("""
+**使い方:**
+1. 上記からボタンサイズを選択
+2. メインエリアのボタンをクリック
+3. 対応するページに移動
+
+**ボタンの特徴:**
+- ホバー効果あり
+- クリック時のアニメーション
+- レスポンシブデザイン
+- カスタムカラー
+""")
+
+# ページ選択用の隠しコンポーネント（JavaScriptから値を受け取る）
+selected_page = st.selectbox(
+    "現在のページ",
+    ["ホーム", "アバウト", "サービス", "お問い合わせ"],
+    key="page_selector",
+    label_visibility="hidden"
+)
+
+# セッション状態を更新
+if selected_page != st.session_state.current_page:
+    st.session_state.current_page = selected_page
+
+# Streamlit標準のボタンでページ切り替え（フォールバック）
+st.markdown("### Streamlit標準ボタン（代替手段）")
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+    if st.button("🏠 ホーム", key="home_btn"):
+        st.session_state.current_page = "ホーム"
+
+with col2:
+    if st.button("👤 アバウト", key="about_btn"):
+        st.session_state.current_page = "アバウト"
+
+with col3:
+    if st.button("🛠️ サービス", key="services_btn"):
+        st.session_state.current_page = "サービス"
+
+with col4:
+    if st.button("📧 お問い合わせ", key="contact_btn"):
+        st.session_state.current_page = "お問い合わせ"
 
 st.markdown("---")
-st.markdown("**📝 Note**: このデモは教育目的で作成されています。")
+
+# カスタムボタンを表示
+st.markdown("### カスタムHTMLボタン")
+create_navigation_buttons(button_size)
+
+st.markdown("---")
+
+# 現在のページを表示
+st.markdown(f"**現在のページ:** {st.session_state.current_page}")
+
+# ページコンテンツを表示
+display_page_content(st.session_state.current_page)
