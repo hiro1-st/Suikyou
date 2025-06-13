@@ -235,11 +235,16 @@ def display_page_content(page_name):
     
     page_info = content_map.get(page_name, content_map['ホーム'])
     
+    # テキストのMarkdownをHTMLに変換
+    import re
+    html_content = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', page_info['content'])
+    html_content = html_content.replace('\n', '<br>')
+    
     st.markdown(f"""
     <div class="page-content">
         <h1 class="page-title">{page_info['title']}</h1>
         <div style="font-size: 16px; line-height: 1.6; color: #555;">
-            {page_info['content'].replace('**', '<strong>').replace('**', '</strong>')}
+            {html_content}
         </div>
     </div>
     """, unsafe_allow_html=True)
