@@ -6,7 +6,7 @@ st.title("Streamlit ボタンのデモ")
 # 4つのボタンを2つずつ縦並びで表示
 col1, col2 = st.columns(2)
 
-# st.link_button("ページ１に移動する", url)
+st.link_button("ページ１に移動する", "https://suikyou-hzyvkrtvfpqe4dfufv9xym.streamlit.app/page1")
 
 with col1:
     if st.button("ボタン1", key="btn1"):
